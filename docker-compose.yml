@@ -46,9 +46,9 @@ services:
       image: nestjs-api-prod:1.0.0
       build:
           context: ./consumer
-          target: development
+          target: production
           dockerfile: ./Dockerfile
-      command: yarn start
+      command: yarn start:prod
       networks:
           - app-network
       volumes:
@@ -64,9 +64,9 @@ services:
       image: nestjs-api-prod:1.0.0
       build:
           context: ./producer
-          target: development
+          target: production
           dockerfile: ./Dockerfile
-      command: yarn start
+      command: yarn start:prod
       ports:
           - '3000:3000'
       networks:

@@ -99,6 +99,13 @@ _Below is an example of how you can instruct your audience on installing and set
    ```sh
    docker-compose up --build -d
    ```
+3. Request sample for insomnia (https://insomnia.rest/) is available in docs section.
+  Send a post message to route /invoice (POST).  
+   ```sh
+   {
+     'id': 1
+   }
+   ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
