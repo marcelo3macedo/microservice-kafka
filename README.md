@@ -149,5 +149,3 @@ Project Link: [hhttps://github.com/marcelo3macedo/microservice-kafka](https://gi
 [license-url]: https://github.com/marcelo3macedo/Memorizou/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/marcelo-alberico-macedo-23639630
-[product-screenshot]: docs/images/logo.png[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
