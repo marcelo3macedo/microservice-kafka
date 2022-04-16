@@ -9,6 +9,8 @@ services:
       - '2181:2181'
     volumes:
       - 'zookeeper_data:/bitnami'
+    networks:
+          - app-network
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
 
@@ -18,17 +20,64 @@ services:
     ports:
       - '9092:9092'
       - '9093:9093'
+    hostname: 'kafka-internal.io'
     volumes:
       - 'kafka_data:/bitnami'
     environment:
+      - KAFKA_ADVERTISED_HOST_NAME=kafka-internal.io
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
       - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
+    networks:
+          - app-network
+    healthcheck:
+      test: ["CMD", "kafka-topics.sh", "--list", "--zookeeper", "zookeeper:2181"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
     depends_on:
-      - zookeeper
+      - zookeeper   
+
+  consumer:
+      container_name: consumer
+      image: nestjs-api-prod:1.0.0
+      build:
+          context: ./consumer
+          target: development
+          dockerfile: ./Dockerfile
+      command: yarn start
+      networks:
+          - app-network
+      volumes:
+          - ./consumer:/usr/src/app
+          - /usr/src/app/node_modules
+      restart: unless-stopped
+      depends_on:
+        kafka:
+          condition: service_healthy
+          
+  producer:
+      container_name: producer
+      image: nestjs-api-prod:1.0.0
+      build:
+          context: ./producer
+          target: development
+          dockerfile: ./Dockerfile
+      command: yarn start
+      ports:
+          - '3000:3000'
+      networks:
+          - app-network
+      volumes:
+          - ./producer:/usr/src/app
+          - /usr/src/app/node_modules
+      restart: unless-stopped
+      depends_on:
+        kafka:
+          condition: service_healthy
 
 volumes:
   zookeeper_data:
@@ -37,5 +86,5 @@ volumes:
     driver: local
 
 networks:
-  rabbitmq_go_net:
+  app-network:
     driver: bridge
