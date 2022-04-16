@@ -10,7 +10,7 @@ export class AppController {
     transport: Transport.KAFKA,
     options: {
       client: {
-        brokers: [ 'kafka-internal.io:9093' ]
+        brokers: [ 'kafka-internal.io:9092' ]
       },
       consumer: {
         groupId: 'ec-consumer'
