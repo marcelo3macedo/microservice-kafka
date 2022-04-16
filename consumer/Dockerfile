@@ -6,7 +6,7 @@ COPY package*.json ./
 
 COPY . .
 
-RUN  yarn install --production=false
+RUN  yarn install --save-dev
 
 RUN yarn build
 
